@@ -4,7 +4,7 @@
   "background": {
     "type": "solid",
     "color": "#ffffff",
-    "panel": { "color": "#8478ff", "inset": 44, "radius": 80, "wobble": 28 }
+    "panel": { "color": "#8478ff", "inset": 50, "radius": 90, "shape": "blob", "wobble": 20, "waveLength": 760 }
   },
   "font": {
     "family": "M PLUS Rounded 1c",
@@ -38,7 +38,7 @@
     "statusSize": 32
   },
   "bubble": {
-    "radius": 74,
+    "radius": 92,
     "groupRadius": 74,
     "minWidth": 440,
     "paddingX": 60,
@@ -50,7 +50,11 @@
     "tailSize": 50,
     "tailInset": 100,
     "tailPosition": "last",
-    "wobble": 8,
+    "shape": "blob",
+    "wobble": 15,
+    "waveLength": 420,
+    "irregular": 1,
+    "tilt": 2,
     "shadow": null,
     "emojiOnlyLarge": false,
     "A": { "background": "#ffb6e6", "textColor": "#1c1c1c", "metaColor": "#6b4b60" },

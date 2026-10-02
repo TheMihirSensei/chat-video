@@ -47,6 +47,12 @@ export type Theme = {
       radius: number;
       /** Hand-drawn edge wobble strength in px (0 = clean edges). */
       wobble: number;
+      /** Wave size for the filter wobble: lower = longer, smoother waves. */
+      wobbleFrequency?: number;
+      /** rect = rounded rectangle (+ optional filter wobble); blob = smooth hand-drawn outline. */
+      shape?: 'rect' | 'blob';
+      /** blob shape: length of the main wave along the edge, in px. */
+      waveLength?: number;
     } | null;
   };
   font: {
@@ -135,8 +141,21 @@ export type Theme = {
     tailSize: number;
     /** speech tail only: distance from the bubble's outer edge. */
     tailInset: number;
+    /**
+     * rect = rounded rectangle, roughened by `wobble` (filter);
+     * blob = smooth hand-drawn outline whose edge wanders in/out by `wobble` px.
+     */
+    shape: 'rect' | 'blob';
+    /** blob shape: length of the main wave along the edge, in px. */
+    waveLength: number;
     /** Hand-drawn edge wobble strength in px (0 = clean edges). */
     wobble: number;
+    /** Wave size: lower = longer, rolling waves; higher = small ripples. */
+    wobbleFrequency: number;
+    /** 0..1: gives every bubble its own lopsided corner shape (0 = symmetric). */
+    irregular: number;
+    /** Max tilt in degrees of the bubble shape (text stays straight). Varies per bubble. */
+    tilt: number;
     /** first = tail on first bubble of a group (WhatsApp), last = on last (iMessage). */
     tailPosition: 'first' | 'last';
     /** CSS drop-shadow arguments, e.g. "0 2px 3px rgba(0,0,0,0.2)", or null. */

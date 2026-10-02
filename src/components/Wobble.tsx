@@ -24,13 +24,14 @@ const Filter: React.FC<{id: string; frequency: number; scale: number; seed: numb
 export const WobbleFilters: React.FC<{theme: Theme}> = ({theme}) => {
   const panel = theme.background.panel;
   if (!theme.bubble.wobble && !panel?.wobble) return null;
+  // Blob shapes draw their own outline and don't need the filters.
   return (
     <svg width={0} height={0} style={{position: 'absolute'}} aria-hidden>
       <defs>
         {Array.from({length: WOBBLE_VARIANTS}, (_, i) => (
-          <Filter key={i} id={`wobble-${i}`} frequency={0.012} scale={theme.bubble.wobble} seed={i * 7 + 3} />
+          <Filter key={i} id={`wobble-${i}`} frequency={theme.bubble.wobbleFrequency ?? 0.012} scale={theme.bubble.wobble} seed={i * 7 + 3} />
         ))}
-        {panel && <Filter id="wobble-panel" frequency={0.0035} scale={panel.wobble} seed={11} />}
+        {panel && <Filter id="wobble-panel" frequency={panel.wobbleFrequency ?? 0.0035} scale={panel.wobble} seed={11} />}
       </defs>
     </svg>
   );

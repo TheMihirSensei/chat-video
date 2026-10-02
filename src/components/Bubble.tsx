@@ -2,6 +2,7 @@ import React from 'react';
 import type {BubbleColors, Theme} from '../theme';
 import type {PersonId} from '../types';
 import {TAIL_CORNER_RADIUS, Tail, speechTailDepth} from './Tail';
+import {BlobFill, rand} from './Blob';
 import {wobbleFilter} from './Wobble';
 
 export type TickState = 'sent' | 'delivered' | 'read';
@@ -47,6 +48,12 @@ export const bubbleRadius = (
 export const tailSpace = (theme: Theme, showTail: boolean) =>
   showTail && theme.bubble.tail === 'speech' ? speechTailDepth(theme.bubble.tailSize) : 0;
 
+/** Lopsided elliptical corners, different for every bubble (e.g. "80px 52px … / 61px 90px …"). */
+const irregularRadius = (radius: number, amount: number, seed: number) => {
+  const r = (k: number) => `${Math.round(radius * (1 + (rand(seed, k) - 0.5) * 1.2 * amount))}px`;
+  return `${r(1)} ${r(2)} ${r(3)} ${r(4)} / ${r(5)} ${r(6)} ${r(7)} ${r(8)}`;
+};
+
 /**
  * The bubble's background + tail on their own layer behind the content, so the
  * hand-drawn wobble filter distorts the outline but never the text.
@@ -62,18 +69,34 @@ export const BubbleShape: React.FC<{
   seed: number;
 }> = ({theme, side, background, tailBackground, border, radius, showTail, seed}) => {
   const b = theme.bubble;
+  const tilt = b.tilt ? (rand(seed, 9) * 2 - 1) * b.tilt : 0;
+  const blob = b.shape === 'blob';
   return (
-    <div style={{position: 'absolute', inset: 0, filter: wobbleFilter(b.wobble, seed)}}>
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background,
-          border: border ?? undefined,
-          borderRadius: radius,
-          backdropFilter: b.backdropBlur ? `blur(${b.backdropBlur}px)` : undefined,
-        }}
-      />
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        filter: blob ? undefined : wobbleFilter(b.wobble, seed),
+        transform: tilt ? `rotate(${tilt.toFixed(2)}deg)` : undefined,
+      }}
+    >
+      {blob ? (
+        <BlobFill
+          background={background}
+          options={{radius: b.radius, amplitude: b.wobble, waveLength: b.waveLength, irregular: b.irregular, seed}}
+        />
+      ) : (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background,
+            border: border ?? undefined,
+            borderRadius: b.irregular ? irregularRadius(b.radius, b.irregular, seed) : radius,
+            backdropFilter: b.backdropBlur ? `blur(${b.backdropBlur}px)` : undefined,
+          }}
+        />
+      )}
       {showTail && (
         <Tail
           side={side}
@@ -81,6 +104,7 @@ export const BubbleShape: React.FC<{
           position={b.tailPosition}
           size={b.tailSize}
           inset={b.tailInset}
+          overlap={8 + (blob ? b.wobble * 1.5 : 0)}
           background={tailBackground}
         />
       )}

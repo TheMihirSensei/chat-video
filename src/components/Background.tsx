@@ -2,6 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Html5Video, Img} from 'remotion';
 import {resolveSrc} from '../assets';
 import type {Theme} from '../theme';
+import {BlobFill} from './Blob';
 import {PANEL_WOBBLE_FILTER} from './Wobble';
 
 export const Background: React.FC<{background: Theme['background']}> = ({background: bg}) => {
@@ -17,7 +18,21 @@ export const Background: React.FC<{background: Theme['background']}> = ({backgro
       {bg.type === 'image' && bg.src && <Img src={resolveSrc(bg.src)} style={media} />}
       {bg.type === 'video' && bg.src && <Html5Video src={resolveSrc(bg.src)} style={media} loop muted />}
       {bg.overlay && <AbsoluteFill style={{background: bg.overlay}} />}
-      {bg.panel && (
+      {bg.panel?.shape === 'blob' && (
+        <div style={{position: 'absolute', inset: bg.panel.inset}}>
+          <BlobFill
+            background={bg.panel.color}
+            options={{
+              radius: bg.panel.radius,
+              amplitude: bg.panel.wobble,
+              waveLength: bg.panel.waveLength ?? 600,
+              irregular: 0.5,
+              seed: 7,
+            }}
+          />
+        </div>
+      )}
+      {bg.panel && bg.panel.shape !== 'blob' && (
         <div
           style={{
             position: 'absolute',

@@ -28,20 +28,23 @@ export const Tail: React.FC<{
   size: number;
   /** speech tail only: distance from the bubble's outer edge. */
   inset?: number;
+  /** speech tail only: how far the tail's base reaches up into the bubble (covers wavy edges). */
+  overlap?: number;
   background: string;
-}> = ({side, style, position, size, inset = 60, background}) => {
+}> = ({side, style, position, size, inset = 60, overlap = SPEECH_OVERLAP, background}) => {
   if (style === 'none') return null;
   if (style === 'speech') {
     // Comic spike under the bubble. Drawn for A (inner edge on the left, curving
     // out to the right) and mirrored for B. The top overlaps into the bubble.
-    const h = size * 1.5;
+    // Visible depth stays the same; the base just extends further up inside the bubble.
+    const h = size * 1.5 - SPEECH_OVERLAP + overlap;
     return (
       <div
         style={{
           position: 'absolute',
           width: size,
           height: h,
-          bottom: -(h - SPEECH_OVERLAP),
+          bottom: -(size * 1.5 - SPEECH_OVERLAP),
           [side === 'A' ? 'right' : 'left']: inset,
           background,
           clipPath: `path('M0 0 L${size * 0.08} ${h} Q${size * 0.38} ${h * 0.38} ${size} 0 Z')`,

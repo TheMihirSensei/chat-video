@@ -1,0 +1,114 @@
+{
+  "name": "default",
+  "video": {
+    "format": "horizontal",
+    "fps": 30,
+    "width": null,
+    "height": null
+  },
+  "background": {
+    "type": "solid",
+    "color": "#ffffff",
+    "gradient": "linear-gradient(180deg, #ffffff 0%, #f6f4ef 100%)",
+    "src": null,
+    "overlay": null,
+    "blur": 0,
+    "panel": null
+  },
+  "emojiFont": "Noto Color Emoji",
+  "media": {
+    "show": true,
+    "side": "left",
+    "width": 0.42,
+    "height": 0.72,
+    "anchor": "bottom",
+    "offsetX": 0,
+    "offsetY": 0,
+    "fit": "contain",
+    "speed": 1,
+    "entrance": "fade",
+    "entranceDuration": 1,
+    "crossfade": 0.6
+  },
+  "text": {
+    "x": 0.68,
+    "y": 0.5,
+    "maxWidth": 900,
+    "align": "center",
+    "main": {
+      "font": "Yomogi",
+      "weights": [
+        400
+      ],
+      "size": 96,
+      "weight": 400,
+      "color": "#222222",
+      "lineHeight": 1.5,
+      "letterSpacing": 6,
+      "stroke": "#222222",
+      "strokeWidth": 2.5,
+      "marginTop": 0
+    },
+    "reading": {
+      "font": "Patrick Hand",
+      "weights": [
+        400
+      ],
+      "size": 36,
+      "weight": 400,
+      "color": "#9a9a9a",
+      "lineHeight": 1.3,
+      "letterSpacing": 1,
+      "stroke": null,
+      "strokeWidth": 0,
+      "marginTop": 14
+    },
+    "translation": {
+      "font": "Patrick Hand",
+      "weights": [
+        400
+      ],
+      "size": 48,
+      "weight": 400,
+      "color": "#6b6b6b",
+      "lineHeight": 1.3,
+      "letterSpacing": 0.5,
+      "stroke": null,
+      "strokeWidth": 0,
+      "marginTop": 30
+    },
+    "translationFormat": "{t}",
+    "showReading": false,
+    "showTranslation": true
+  },
+  "animation": {
+    "textIn": "chars",
+    "textInDuration": 0.5,
+    "charStagger": 0.07,
+    "translationIn": "rise",
+    "translationInDuration": 0.7,
+    "textOut": "blur",
+    "textOutDuration": 0.6,
+    "outroLast": true
+  },
+  "timing": {
+    "startDelay": 0.8,
+    "translationDelay": 1.6,
+    "audioDelay": 0.3,
+    "repeatGap": 0.8,
+    "holdAfter": 1.2,
+    "secondsPerChar": 0.3,
+    "minSlide": 3,
+    "gap": 0.25,
+    "endHold": 1
+  },
+  "sounds": {
+    "slideIn": null,
+    "volume": 0.4,
+    "voiceVolume": 1
+  },
+  "music": {
+    "src": null,
+    "volume": 0.15
+  }
+}

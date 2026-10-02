@@ -9,6 +9,11 @@ import {LessonVideo} from './lesson/LessonVideo';
 import {getLessonVideoSize, resolveLessonTheme} from './lesson/theme';
 import {computeLessonTimeline} from './lesson/timing';
 import type {LessonProps} from './lesson/types';
+import samplePhrases from '../phrases/phrase1.json';
+import {PhraseVideo} from './phrase/PhraseVideo';
+import {getPhraseVideoSize, resolvePhraseTheme} from './phrase/theme';
+import {computePhraseTimeline} from './phrase/timing';
+import type {PhraseProps} from './phrase/types';
 import {getVideoSize, resolveTheme} from './theme';
 import {computeTimeline} from './timing';
 import type {ChatProps} from './types';
@@ -23,23 +28,38 @@ const calculateMetadata: CalculateMetadataFunction<ChatProps> = ({props}) => {
   };
 };
 
-const calculateLessonMetadata: CalculateMetadataFunction<LessonProps> = async ({props}) => {
-  const theme = resolveLessonTheme(props.theme);
-  const fps = theme.video.fps;
-  // Each line lasts as long as its voice clip, so read the audio lengths up front.
-  const audioDurations = await Promise.all(
-    props.lines.map((line) =>
-      line.audio
-        ? getAudioDurationInSeconds(resolveSrc(line.audio)).catch((err) => {
-            throw new Error(`Could not read audio "${line.audio}" (is it in public/?): ${err.message}`);
+/** Reads voice clip lengths up front, since lines/slides last as long as their audio. */
+const readAudioDurations = (items: {audio?: string}[]) =>
+  Promise.all(
+    items.map((item) =>
+      item.audio
+        ? getAudioDurationInSeconds(resolveSrc(item.audio)).catch((err) => {
+            throw new Error(`Could not read audio "${item.audio}" (is it in public/?): ${err.message}`);
           })
         : null,
     ),
   );
+
+const calculateLessonMetadata: CalculateMetadataFunction<LessonProps> = async ({props}) => {
+  const theme = resolveLessonTheme(props.theme);
+  const fps = theme.video.fps;
+  const audioDurations = await readAudioDurations(props.lines);
   return {
     fps,
     durationInFrames: computeLessonTimeline(props.lines, audioDurations, theme, fps).durationInFrames,
     ...getLessonVideoSize(theme, props.format),
+    props: {...props, audioDurations},
+  };
+};
+
+const calculatePhraseMetadata: CalculateMetadataFunction<PhraseProps> = async ({props}) => {
+  const theme = resolvePhraseTheme(props.theme);
+  const fps = theme.video.fps;
+  const audioDurations = await readAudioDurations(props.slides);
+  return {
+    fps,
+    durationInFrames: computePhraseTimeline(props.slides, audioDurations, theme, fps).durationInFrames,
+    ...getPhraseVideoSize(theme, props.format),
     props: {...props, audioDurations},
   };
 };
@@ -62,6 +82,16 @@ export const RemotionRoot: React.FC = () => (
       component={LessonVideo}
       defaultProps={{theme: 'default', ...(sampleLesson as LessonProps)}}
       calculateMetadata={calculateLessonMetadata}
+      durationInFrames={300}
+      fps={30}
+      width={1920}
+      height={1080}
+    />
+    <Composition
+      id="PhraseVideo"
+      component={PhraseVideo}
+      defaultProps={{theme: 'default', ...(samplePhrases as PhraseProps)}}
+      calculateMetadata={calculatePhraseMetadata}
       durationInFrames={300}
       fps={30}
       width={1920}

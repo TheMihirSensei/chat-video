@@ -10,11 +10,15 @@
     "sounds": "node scripts/generate-sounds.mjs",
     "typecheck": "tsc --noEmit",
     "render:lesson": "remotion render LessonVideo out/lessons/lesson1.mp4 --props=lessons/lesson1.json",
-    "render:lessons": "node scripts/render-lessons.mjs"
+    "render:lessons": "node scripts/render-lessons.mjs",
+    "render:phrase": "remotion render PhraseVideo out/phrases/phrase1.mp4 --props=phrases/phrase1.json",
+    "render:phrases": "node scripts/render-phrases.mjs",
+    "gif:placeholder": "node scripts/placeholder-gif/make-gif.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "^4.0.532",
     "@remotion/cli": "^4.0.532",
+    "@remotion/gif": "^4.0.532",
     "@remotion/media-utils": "^4.0.532",
     "@remotion/renderer": "^4.0.532",
     "react": "^19.3.0",
@@ -24,6 +28,8 @@
   "devDependencies": {
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
+    "gifenc": "^1.0.3",
+    "pngjs": "^7.0.0",
     "typescript": "^7.0.2"
   }
 }

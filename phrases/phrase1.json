@@ -1,0 +1,10 @@
+{
+  "theme": "default",
+  "media": "gifs/cozy.gif",
+  "slides": [
+    { "text": "完璧でなくても良いのです。", "reading": "kanpeki de nakute mo ii no desu.", "translation": "It's okay not to be perfect.", "audio": "audio/p1-kanpeki.wav" },
+    { "text": "少しずつでいい。", "reading": "sukoshi zutsu de ii.", "translation": "Little by little is enough.", "audio": "audio/p1-sukoshi.wav" },
+    { "text": "今日もよく頑張ったね。", "reading": "kyou mo yoku ganbatta ne.", "translation": "You did your best today, too.", "audio": "audio/p1-ganbatta.wav" },
+    { "text": "ゆっくり休んでね。", "reading": "yukkuri yasunde ne.", "translation": "Get some good rest.", "audio": "audio/p1-yasunde.wav" }
+  ]
+}

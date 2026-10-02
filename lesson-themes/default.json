@@ -1,0 +1,92 @@
+{
+  "name": "default",
+  "video": { "format": "horizontal", "fps": 30, "width": null, "height": null },
+  "background": {
+    "type": "solid",
+    "color": "#d4e8f5",
+    "gradient": "linear-gradient(180deg, #dbeefa 0%, #c9e1f2 100%)",
+    "src": null,
+    "overlay": null,
+    "blur": 0,
+    "panel": null
+  },
+  "fonts": {
+    "text": { "family": "Zen Maru Gothic", "weights": [500, 700] },
+    "translation": { "family": "Delius", "weights": [400] },
+    "reading": { "family": "Delius", "weights": [400] },
+    "title": { "family": "Fredoka", "weights": [600] },
+    "emoji": "Noto Color Emoji"
+  },
+  "title": {
+    "show": true,
+    "size": 64,
+    "weight": 600,
+    "color": "#1b1b1b",
+    "stroke": null,
+    "strokeWidth": 0,
+    "subtitleSize": 34,
+    "subtitleColor": "#4a5a66",
+    "top": 95,
+    "align": "center",
+    "scroll": true
+  },
+  "layout": {
+    "paddingX": 225,
+    "top": 200,
+    "bottom": 60,
+    "cardGap": 110,
+    "characterInset": 190,
+    "peek": 140
+  },
+  "card": {
+    "background": "#ffffff",
+    "border": "5px solid #111111",
+    "radius": 46,
+    "shadow": { "x": 12, "y": 14, "color": "#111111" },
+    "paddingX": 85,
+    "characterSidePadding": 190,
+    "paddingY": 40,
+    "minHeight": 256,
+    "align": "auto",
+    "textSize": 82,
+    "textWeight": 500,
+    "textColor": "#111111",
+    "readingSize": 38,
+    "readingColor": "#6b7a86",
+    "translationSize": 50,
+    "translationColor": "#111111",
+    "translationFormat": "({t})",
+    "entrance": "grow",
+    "textReveal": "fade",
+    "typewriterSpeed": 0.08
+  },
+  "placeholder": { "show": true, "background": "#ececec", "radius": 46 },
+  "character": {
+    "height": 340,
+    "offsetX": 80,
+    "offsetY": 0,
+    "entrance": "pop",
+    "idle": "bob",
+    "idleAmplitude": 6,
+    "talk": "bounce"
+  },
+  "characters": {},
+  "timing": {
+    "startDelay": 0.8,
+    "characterLead": 0.6,
+    "textDelay": 0.35,
+    "audioDelay": 0.25,
+    "pauseBetween": 1.2,
+    "repeatGap": 0.8,
+    "endHold": 2.0,
+    "secondsPerChar": 0.25,
+    "minLine": 1.5
+  },
+  "sounds": {
+    "cardIn": null,
+    "characterIn": "sounds/received.wav",
+    "volume": 0.35,
+    "voiceVolume": 1
+  },
+  "music": { "src": null, "volume": 0.15 }
+}

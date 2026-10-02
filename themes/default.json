@@ -1,0 +1,170 @@
+{
+  "name": "default",
+  "video": {
+    "format": "vertical",
+    "fps": 30,
+    "width": null,
+    "height": null
+  },
+  "background": {
+    "type": "solid",
+    "color": "#efe7dd",
+    "gradient": "linear-gradient(180deg, #efe7dd 0%, #e4dccf 100%)",
+    "src": null,
+    "overlay": null,
+    "blur": 0,
+    "panel": null
+  },
+  "font": {
+    "family": "Inter",
+    "source": "google",
+    "file": null,
+    "weights": [
+      400,
+      500,
+      600
+    ],
+    "emojiFont": "Noto Color Emoji"
+  },
+  "layout": {
+    "anchor": "bottom",
+    "chatMaxWidth": 1100,
+    "paddingX": 40,
+    "paddingTop": 36,
+    "paddingBottom": 70,
+    "messageGap": 26,
+    "groupGap": 8,
+    "bubbleMaxWidth": 0.78,
+    "fadeTop": 0
+  },
+  "header": {
+    "show": true,
+    "variant": "bar",
+    "title": null,
+    "avatar": null,
+    "titleFont": null,
+    "titleWeight": 700,
+    "titleSize": 64,
+    "titleColor": "#ffffff",
+    "titleStroke": null,
+    "titleStrokeWidth": 0,
+    "showStatus": true,
+    "height": 170,
+    "background": "#008069",
+    "blur": 0,
+    "borderBottom": null,
+    "textColor": "#ffffff",
+    "statusColor": "rgba(255,255,255,0.8)",
+    "typingStatusColor": "#ffffff",
+    "avatarSize": 100,
+    "nameSize": 46,
+    "statusSize": 32,
+    "onlineText": "online",
+    "typingText": "typing…",
+    "showBackArrow": true,
+    "showCallIcons": true,
+    "centered": false
+  },
+  "phoneFrame": {
+    "show": false,
+    "color": "#111111",
+    "bezel": 22,
+    "radius": 110,
+    "margin": 70,
+    "notch": true,
+    "contentWidth": 1080,
+    "shadow": "0 30px 80px rgba(0,0,0,0.45)"
+  },
+  "bubble": {
+    "radius": 30,
+    "minWidth": 0,
+    "groupRadius": 30,
+    "paddingX": 30,
+    "paddingY": 18,
+    "fontSize": 46,
+    "fontWeight": 400,
+    "lineHeight": 1.3,
+    "tail": "triangle",
+    "tailSize": 26,
+    "tailInset": 60,
+    "wobble": 0,
+    "tailPosition": "first",
+    "shadow": "0 2px 2px rgba(0,0,0,0.13)",
+    "backdropBlur": 0,
+    "emojiOnlyLarge": true,
+    "emojiOnlyScale": 2.6,
+    "A": {
+      "background": "#d9fdd3",
+      "textColor": "#111b21",
+      "glow": null,
+      "glowSize": 0,
+      "opacity": 1,
+      "border": null,
+      "metaColor": "#667781",
+      "tailColor": null
+    },
+    "B": {
+      "background": "#ffffff",
+      "textColor": "#111b21",
+      "glow": null,
+      "glowSize": 0,
+      "opacity": 1,
+      "border": null,
+      "metaColor": "#667781",
+      "tailColor": null
+    }
+  },
+  "typing": {
+    "style": "dots",
+    "dotColor": "#8696a0",
+    "dotSize": 18,
+    "dotGap": 12,
+    "bubble": true,
+    "background": null,
+    "showForA": true,
+    "speed": 1.4
+  },
+  "avatars": {
+    "show": false,
+    "size": 96,
+    "background": "#ffffff",
+    "border": null,
+    "initialsColor": null,
+    "offsetY": 12,
+    "offsetX": 0
+  },
+  "animation": {
+    "entrance": "pop",
+    "scrollDamping": 200,
+    "scrollDuration": 0.45
+  },
+  "timing": {
+    "startDelay": 0.6,
+    "typingPerChar": 0.045,
+    "minTyping": 0.8,
+    "maxTyping": 3,
+    "pauseBetween": 0.6,
+    "endHold": 2,
+    "readDelay": 1
+  },
+  "meta": {
+    "timestamps": true,
+    "startTime": "21:04",
+    "minutesPerMessage": 0.5,
+    "clock": "24h",
+    "fontSize": 24,
+    "readTicks": true,
+    "tickColor": "#8696a0",
+    "readTickColor": "#53bdeb"
+  },
+  "sounds": {
+    "sent": "sounds/sent.wav",
+    "received": "sounds/received.wav",
+    "typing": null,
+    "volume": 0.5
+  },
+  "music": {
+    "src": null,
+    "volume": 0.2
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "chat-video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Turn chat JSON files into animated texting videos with Remotion",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render ChatVideo out/chat1.mp4 --props=chats/chat1.json",
+    "render:all": "node scripts/render-all.mjs",
+    "sounds": "node scripts/generate-sounds.mjs",
+    "typecheck": "tsc --noEmit",
+    "render:lesson": "remotion render LessonVideo out/lessons/lesson1.mp4 --props=lessons/lesson1.json",
+    "render:lessons": "node scripts/render-lessons.mjs"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.532",
+    "@remotion/cli": "^4.0.532",
+    "@remotion/media-utils": "^4.0.532",
+    "@remotion/renderer": "^4.0.532",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "remotion": "^4.0.532"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}

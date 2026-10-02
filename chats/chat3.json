@@ -1,0 +1,15 @@
+{
+  "theme": "doodle",
+  "people": {
+    "A": { "name": "Mihir", "avatar": "mihir.png" },
+    "B": { "name": "Riya",  "avatar": "riya.png" }
+  },
+  "messages": [
+    { "from": "A", "text": "Good morning~! ☀️" },
+    { "from": "B", "text": "morning 😊" },
+    { "from": "A", "text": "were you already awake? 👀" },
+    { "from": "B", "text": "nope... you woke me up 😴" },
+    { "from": "A", "text": "oops 🙈 sorry!!" },
+    { "from": "B", "text": "it's okay, buy me coffee and we're even ☕" }
+  ]
+}

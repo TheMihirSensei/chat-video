@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Rendered videos and render scratch files
+out/
+.props/
+
+# Remotion / build caches
+.remotion/
+build/
+dist/
+
+# Environment & secrets
+.env
+.env.*
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local Claude Code settings
+.claude/settings.local.json

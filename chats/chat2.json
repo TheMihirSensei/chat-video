@@ -1,0 +1,17 @@
+{
+  "theme": "custom",
+  "people": {
+    "A": { "name": "Mihir", "avatar": "mihir.png" },
+    "B": { "name": "Arjun", "avatar": "arjun.png" }
+  },
+  "messages": [
+    { "from": "B", "text": "bro are you coming to the match tomorrow?" },
+    { "from": "A", "text": "obviously 🏏" },
+    { "from": "A", "text": "what time are we leaving" },
+    { "from": "B", "text": "6 am sharp. traffic will be insane" },
+    { "from": "A", "text": "6 AM?? on a sunday???" },
+    { "from": "B", "text": "you want good seats or not 😤" },
+    { "from": "A", "text": "fine. but you're buying breakfast" },
+    { "from": "B", "text": "deal 🤝" }
+  ]
+}

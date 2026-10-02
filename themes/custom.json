@@ -1,0 +1,54 @@
+{
+  "extends": "default",
+  "name": "custom",
+  "background": {
+    "type": "gradient",
+    "color": "#0b0b1a",
+    "gradient": "linear-gradient(160deg, #1a1036 0%, #0b0b1a 55%, #04131f 100%)"
+  },
+  "font": { "family": "Poppins", "weights": [400, 500, 600] },
+  "header": {
+    "height": 220,
+    "background": "rgba(20,16,40,0.75)",
+    "blur": 20,
+    "borderBottom": "1px solid rgba(255,255,255,0.08)",
+    "textColor": "#ffffff",
+    "statusColor": "rgba(255,255,255,0.55)",
+    "typingStatusColor": "#7cf7d4",
+    "avatarSize": 96,
+    "nameSize": 38,
+    "statusSize": 28,
+    "onlineText": "Active now",
+    "typingText": "typing…",
+    "showCallIcons": false,
+    "centered": true
+  },
+  "phoneFrame": { "show": true },
+  "bubble": {
+    "radius": 44,
+    "groupRadius": 14,
+    "paddingX": 34,
+    "paddingY": 20,
+    "tail": "curved",
+    "tailSize": 30,
+    "tailPosition": "last",
+    "shadow": null,
+    "A": {
+      "background": "linear-gradient(135deg, #7b5cff 0%, #3f8cff 100%)",
+      "textColor": "#ffffff",
+      "glow": "rgba(123,92,255,0.55)",
+      "glowSize": 18,
+      "metaColor": "rgba(255,255,255,0.75)",
+      "tailColor": "#3f8cff"
+    },
+    "B": {
+      "background": "rgba(255,255,255,0.12)",
+      "textColor": "#f1f1f7",
+      "border": "1px solid rgba(255,255,255,0.1)",
+      "metaColor": "rgba(255,255,255,0.5)"
+    }
+  },
+  "typing": { "style": "wave", "dotColor": "#cfcfe6", "background": "rgba(255,255,255,0.14)", "showForA": false },
+  "animation": { "entrance": "slide" },
+  "meta": { "timestamps": false, "readTicks": false }
+}

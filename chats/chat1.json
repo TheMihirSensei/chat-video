@@ -1,0 +1,20 @@
+{
+  "people": {
+    "A": { "name": "Mihir", "avatar": "mihir.png" },
+    "B": { "name": "Mithila",  "avatar": "mithila.png" }
+  },
+  "messages": [
+    { "from": "B", "text": "Did you watch the new episode?" },
+    { "from": "A", "text": "Not yet 😭 no spoilers!!" },
+    { "from": "B", "text": "😏" },
+    { "from": "A", "text": "Mithila. I swear." },
+    { "from": "A", "text": "If you spoil it I'm unfollowing you everywhere" },
+    { "from": "B", "text": "I would NEVER 😇" },
+    { "from": "B", "text": "but you should watch it tonight" },
+    { "from": "B", "text": "like... right now" },
+    { "from": "A", "text": "why do you sound so suspicious" },
+    { "from": "B", "text": "no reason 👀", "delay": 0.8 },
+    { "from": "A", "text": "okay okay starting it now 🍿" },
+    { "from": "B", "text": "text me when you reach the ending 😭😭" }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "extends": "default",
+  "name": "doodle",
+  "background": {
+    "type": "solid",
+    "color": "#ffffff",
+    "panel": { "color": "#8478ff", "inset": 44, "radius": 80, "wobble": 28 }
+  },
+  "font": {
+    "family": "M PLUS Rounded 1c",
+    "weights": [400, 500, 700]
+  },
+  "layout": {
+    "paddingX": 110,
+    "paddingTop": 50,
+    "paddingBottom": 120,
+    "messageGap": 14,
+    "groupGap": 14,
+    "bubbleMaxWidth": 0.8,
+    "fadeTop": 40
+  },
+  "header": {
+    "variant": "logo",
+    "height": 250,
+    "background": "transparent",
+    "title": null,
+    "avatar": null,
+    "titleFont": "Fredoka",
+    "titleWeight": 700,
+    "titleSize": 76,
+    "titleColor": "#ffffff",
+    "titleStroke": "#3b3170",
+    "titleStrokeWidth": 9,
+    "avatarSize": 108,
+    "showStatus": false,
+    "statusColor": "rgba(255,255,255,0.85)",
+    "typingStatusColor": "#ffffff",
+    "statusSize": 32
+  },
+  "bubble": {
+    "radius": 74,
+    "groupRadius": 74,
+    "minWidth": 440,
+    "paddingX": 60,
+    "paddingY": 64,
+    "fontSize": 54,
+    "fontWeight": 500,
+    "lineHeight": 1.35,
+    "tail": "speech",
+    "tailSize": 50,
+    "tailInset": 100,
+    "tailPosition": "last",
+    "wobble": 8,
+    "shadow": null,
+    "emojiOnlyLarge": false,
+    "A": { "background": "#ffb6e6", "textColor": "#1c1c1c", "metaColor": "#6b4b60" },
+    "B": { "background": "#ffffff", "textColor": "#1c1c1c", "metaColor": "#777777" }
+  },
+  "typing": {
+    "style": "dots",
+    "bubble": false,
+    "dotColor": "#7c7c8c",
+    "dotSize": 26,
+    "dotGap": 22,
+    "showForA": true,
+    "speed": 1.2
+  },
+  "avatars": {
+    "show": true,
+    "size": 96,
+    "background": "#ffffff",
+    "border": "3px solid #2e2a3a",
+    "initialsColor": "#7b6cff",
+    "offsetY": -48,
+    "offsetX": 0
+  },
+  "animation": { "entrance": "pop" },
+  "meta": { "timestamps": false, "readTicks": false }
+}

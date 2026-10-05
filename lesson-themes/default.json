@@ -1,6 +1,11 @@
 {
   "name": "default",
-  "video": { "format": "horizontal", "fps": 30, "width": null, "height": null },
+  "video": {
+    "format": "horizontal",
+    "fps": 30,
+    "width": null,
+    "height": null
+  },
   "background": {
     "type": "solid",
     "color": "#d4e8f5",
@@ -11,38 +16,38 @@
     "panel": null
   },
   "fonts": {
-    "text": { "family": "Zen Maru Gothic", "weights": [500, 700] },
-    "translation": { "family": "Delius", "weights": [400] },
-    "reading": { "family": "Delius", "weights": [400] },
-    "title": { "family": "Fredoka", "weights": [600] },
+    "text": {
+      "family": "Zen Maru Gothic",
+      "weights": [
+        500,
+        700
+      ]
+    },
+    "translation": {
+      "family": "Delius",
+      "weights": [
+        400
+      ]
+    },
     "emoji": "Noto Color Emoji"
-  },
-  "title": {
-    "show": true,
-    "size": 64,
-    "weight": 600,
-    "color": "#1b1b1b",
-    "stroke": null,
-    "strokeWidth": 0,
-    "subtitleSize": 34,
-    "subtitleColor": "#4a5a66",
-    "top": 95,
-    "align": "center",
-    "scroll": true
   },
   "layout": {
     "paddingX": 225,
-    "top": 200,
-    "bottom": 60,
-    "cardGap": 110,
+    "top": 70,
+    "bottom": 70,
+    "cardGap": 90,
     "characterInset": 190,
-    "peek": 140
+    "linesPerSlide": 2
   },
   "card": {
     "background": "#ffffff",
     "border": "5px solid #111111",
     "radius": 46,
-    "shadow": { "x": 12, "y": 14, "color": "#111111" },
+    "shadow": {
+      "x": 12,
+      "y": 14,
+      "color": "#111111"
+    },
     "paddingX": 85,
     "characterSidePadding": 190,
     "paddingY": 40,
@@ -51,8 +56,6 @@
     "textSize": 82,
     "textWeight": 500,
     "textColor": "#111111",
-    "readingSize": 38,
-    "readingColor": "#6b7a86",
     "translationSize": 50,
     "translationColor": "#111111",
     "translationFormat": "({t})",
@@ -60,15 +63,13 @@
     "textReveal": "fade",
     "typewriterSpeed": 0.08
   },
-  "placeholder": { "show": true, "background": "#ececec", "radius": 46 },
   "character": {
     "height": 340,
     "offsetX": 80,
     "offsetY": 0,
     "entrance": "pop",
-    "idle": "bob",
-    "idleAmplitude": 6,
-    "talk": "bounce"
+    "fit": "contain",
+    "speed": 1
   },
   "characters": {},
   "timing": {
@@ -76,11 +77,25 @@
     "characterLead": 0.6,
     "textDelay": 0.35,
     "audioDelay": 0.25,
-    "pauseBetween": 1.2,
-    "repeatGap": 0.8,
-    "endHold": 2.0,
+    "answerDelay": 1.5,
+    "slideHold": 1.5,
+    "slideGap": 0.3,
+    "endHold": 2,
     "secondsPerChar": 0.25,
     "minLine": 1.5
+  },
+  "audio": {
+    "japaneseRepeat": 3,
+    "englishRepeat": 1,
+    "order": "english-first",
+    "repeatGap": 0.7,
+    "languageGap": 1
+  },
+  "transition": {
+    "out": "shrink",
+    "duration": 0.5,
+    "stagger": 0.1,
+    "outroLast": true
   },
   "sounds": {
     "cardIn": null,
@@ -88,5 +103,8 @@
     "volume": 0.35,
     "voiceVolume": 1
   },
-  "music": { "src": null, "volume": 0.15 }
+  "music": {
+    "src": null,
+    "volume": 0.15
+  }
 }

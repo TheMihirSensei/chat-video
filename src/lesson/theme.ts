@@ -1,4 +1,5 @@
-import {deepMerge, FORMAT_SIZES, type Theme} from '../theme';
+import type {Theme} from '../theme';
+import {deepMerge, FORMAT_SIZES} from '../theme-utils';
 import type {Format} from '../types';
 import type {CharacterDef} from './types';
 
@@ -13,38 +14,20 @@ export type LessonTheme = {
   fonts: {
     text: FontSpec;
     translation: FontSpec;
-    reading: FontSpec;
-    title: FontSpec;
     /** Emoji font from Google Fonts, or null for system emoji. */
     emoji: string | null;
-  };
-  title: {
-    show: boolean;
-    size: number;
-    weight: number;
-    color: string;
-    /** Outline color around the letters, or null. */
-    stroke: string | null;
-    strokeWidth: number;
-    subtitleSize: number;
-    subtitleColor: string;
-    /** Distance from the top edge to the title's center. */
-    top: number;
-    align: 'left' | 'center' | 'right';
-    /** true = title scrolls away with the cards; false = stays fixed and cards fade out under it. */
-    scroll: boolean;
   };
   layout: {
     /** Left/right edge of the card column. */
     paddingX: number;
-    /** Where the first card starts (leave room for the title). */
+    /** Each slide's cards are centered vertically between top and bottom. */
     top: number;
     bottom: number;
     cardGap: number;
     /** How far the card stops short of the column edge on the character's side. */
     characterInset: number;
-    /** How much of the next (placeholder) card to keep in view when scrolling. */
-    peek: number;
+    /** Older flat "lines" files are split into slides of this many lines. */
+    linesPerSlide: number;
   };
   card: {
     background: string;
@@ -63,8 +46,6 @@ export type LessonTheme = {
     textSize: number;
     textWeight: number;
     textColor: string;
-    readingSize: number;
-    readingColor: string;
     translationSize: number;
     translationColor: string;
     /** How the translation is written; {t} is replaced, e.g. "({t})". */
@@ -74,20 +55,18 @@ export type LessonTheme = {
     /** Seconds per character for the typewriter reveal. */
     typewriterSpeed: number;
   };
-  /** Empty card shown where the next line will appear. */
-  placeholder: {show: boolean; background: string; radius: number};
   character: {
     height: number;
     offsetX: number;
     offsetY: number;
-    entrance: 'pop' | 'slide' | 'drop' | 'fade';
-    /** Gentle floating while idle. */
-    idle: 'bob' | 'none';
-    idleAmplitude: number;
-    /** Little bounce while its audio plays. */
-    talk: 'bounce' | 'none';
+    /** How the picture appears. Its own motion comes from the GIF itself. */
+    entrance: 'pop' | 'slide' | 'drop' | 'fade' | 'none';
+    /** contain = whole picture visible inside its box. */
+    fit: 'contain' | 'cover' | 'fill';
+    /** GIF / video playback speed. */
+    speed: number;
   };
-  /** Characters available to every lesson using this theme (lessons can add/override). */
+  /** Reusable picture presets for every lesson using this theme (lessons can add/override). */
   characters: Record<string, CharacterDef>;
   timing: {
     startDelay: number;
@@ -97,14 +76,38 @@ export type LessonTheme = {
     textDelay: number;
     /** Audio starts this long after the text. */
     audioDelay: number;
-    /** Pause after a line's audio ends before the next character appears. */
-    pauseBetween: number;
-    /** Gap between repeats when a line's audio plays more than once. */
-    repeatGap: number;
+    /** Thinking time: pause after a line (e.g. the question) before the next line on the same slide. */
+    answerDelay: number;
+    /** Keep the finished slide on screen this long before it leaves. */
+    slideHold: number;
+    /** Gap after a slide has left before the next one starts. */
+    slideGap: number;
     endHold: number;
-    /** Lines without audio: seconds per character, with a minimum. */
+    /** Lines with no audio at all: seconds per character, with a minimum. */
     secondsPerChar: number;
     minLine: number;
+  };
+  /** How each line's Japanese and English clips are played. */
+  audio: {
+    /** Times the Japanese clip (line.audio) plays. */
+    japaneseRepeat: number;
+    /** Times the English clip (line.translationAudio) plays. */
+    englishRepeat: number;
+    /** Which language is heard first. */
+    order: 'japanese-first' | 'english-first';
+    /** Gap between repeats of the same clip. */
+    repeatGap: number;
+    /** Gap when switching from one language to the other. */
+    languageGap: number;
+  };
+  /** How a finished slide leaves the screen. */
+  transition: {
+    out: 'fade' | 'rise' | 'sink' | 'slideLeft' | 'shrink';
+    duration: number;
+    /** Delay between each card leaving (seconds), so they go one after another. */
+    stagger: number;
+    /** Also animate the last slide out at the end. */
+    outroLast: boolean;
   };
   sounds: {
     /** Short effect when each card appears (path in public/), or null. */
@@ -119,11 +122,8 @@ export type LessonTheme = {
 type DeepPartial<T> = {[K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> | null : T[K]};
 export type LessonThemeInput = DeepPartial<LessonTheme> & {extends?: string};
 
-// Every *.json in /lesson-themes is bundled automatically, keyed by file name.
-const themeContext = require.context('../../lesson-themes', false, /\.json$/);
-export const lessonThemeRegistry: Record<string, LessonThemeInput> = Object.fromEntries(
-  themeContext.keys().map((key) => [key.replace(/^\.\//, '').replace(/\.json$/, ''), themeContext(key) as LessonThemeInput]),
-);
+import {lessonThemeRegistry} from './theme-registry';
+export {lessonThemeRegistry};
 
 const resolveNamed = (name: string, seen: string[]): LessonTheme => {
   const json = lessonThemeRegistry[name];

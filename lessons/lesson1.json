@@ -1,15 +1,25 @@
 {
   "theme": "default",
-  "title": "Japanese Greetings",
-  "subtitle": "Lesson 1",
-  "characters": {
-    "ghost":   { "image": "characters/ghost.svg",   "side": "right", "height": 340 },
-    "snowman": { "image": "characters/snowman.svg", "side": "left",  "height": 380, "offsetX": 60, "offsetY": 10 }
-  },
-  "lines": [
-    { "character": "ghost",   "text": "おはよう",   "translation": "Good morning", "audio": "audio/ohayou-1.wav" },
-    { "character": "snowman", "text": "おはよう！", "translation": "Morning!",     "audio": "audio/ohayou-2.wav" },
-    { "character": "ghost",   "text": "げんき？",   "translation": "How are you?", "audio": "audio/genki-1.wav" },
-    { "character": "snowman", "text": "うん、げんきです！", "reading": "un, genki desu!", "translation": "Yeah, I'm good!", "audio": "audio/genki-2.wav" }
+  "slides": [
+    {
+      "lines": [
+        { "image": "characters/ghost.gif", "side": "right", "height": 340,
+          "text": "おはよう", "translation": "Good morning",
+          "audio": "audio/ohayou-1.wav", "translationAudio": "audio/en-good-morning.wav" },
+        { "image": "characters/snowman.gif", "side": "left", "height": 380, "offsetX": 60, "offsetY": 10,
+          "text": "おはよう！", "translation": "Morning!",
+          "audio": "audio/ohayou-2.wav", "translationAudio": "audio/en-morning.wav" }
+      ]
+    },
+    {
+      "lines": [
+        { "image": "characters/ghost.gif", "side": "right", "height": 340,
+          "text": "げんき？", "translation": "How are you?",
+          "audio": "audio/genki-1.wav", "translationAudio": "audio/en-how-are-you.wav" },
+        { "image": "characters/snowman.gif", "side": "left", "height": 380, "offsetX": 60, "offsetY": 10,
+          "text": "うん、げんきです！", "translation": "Yeah, I'm good!",
+          "audio": "audio/genki-2.wav", "translationAudio": "audio/en-im-good.wav" }
+      ]
+    }
   ]
 }

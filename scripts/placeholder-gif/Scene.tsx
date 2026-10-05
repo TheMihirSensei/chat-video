@@ -1,30 +1,33 @@
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
+import {CHARACTER_FPS, CHARACTER_FRAMES, Ghost, Snowman} from './Characters';
 
 // A tiny looping line-art scene (steaming mug + swaying tulips) used to make the
 // placeholder transparent GIF. Replace public/gifs/cozy.gif with your own art.
-const FRAMES = 24;
+// Calm on purpose: a 4-second loop at 20 fps with small, smooth movements and no fading.
+const FPS = 20;
+const FRAMES = 80;
 const INK = '#1d1d1d';
 
 const Scene: React.FC = () => {
   const frame = useCurrentFrame();
   const t = (frame / FRAMES) * Math.PI * 2;
+  // Steam stays visible and just drifts gently side to side and up/down.
   const steam = (dx: number, phase: number) => {
-    const y = -((frame / FRAMES + phase) % 1) * 40;
-    const o = Math.sin(((frame / FRAMES + phase) % 1) * Math.PI);
+    const x = dx + Math.sin(t + phase) * 4;
+    const y = 300 + Math.sin(t * 2 + phase) * 3;
     return (
       <path
-        d={`M${dx} ${300 + y} c-14 -16 14 -28 0 -44 c-14 -16 14 -28 0 -44`}
+        d={`M${x} ${y} c-12 -16 12 -28 0 -44 c-12 -16 12 -28 0 -44`}
         fill="none"
         stroke={INK}
         strokeWidth={6}
         strokeLinecap="round"
-        opacity={o}
       />
     );
   };
   const tulip = (x: number, h: number, phase: number, color: string) => (
-    <g transform={`rotate(${Math.sin(t + phase) * 5} 420 470)`}>
+    <g transform={`rotate(${Math.sin(t + phase) * 2.5} 420 470)`}>
       <path d={`M420 470 Q${x - 6} ${470 - h / 2} ${x} ${470 - h}`} fill="none" stroke={INK} strokeWidth={5} strokeLinecap="round" />
       <path
         d={`M${x - 26} ${470 - h} q-4 -40 14 -46 l12 16 l12 -16 q18 6 14 46 q-26 18 -52 0 z`}
@@ -56,14 +59,17 @@ const Scene: React.FC = () => {
         <ellipse cx={174} cy={468} rx={8} ry={4.5} fill="#f4a7b9" />
         <ellipse cx={226} cy={468} rx={8} ry={4.5} fill="#f4a7b9" />
         {/* steam */}
-        {steam(180, 0)}
-        {steam(205, 0.33)}
-        {steam(230, 0.66)}
+        {steam(185, 0)}
+        {steam(215, 2.1)}
       </svg>
     </AbsoluteFill>
   );
 };
 
 registerRoot(() => (
-  <Composition id="PlaceholderGif" component={Scene} durationInFrames={FRAMES} fps={12} width={600} height={600} />
+  <>
+    <Composition id="PlaceholderGif" component={Scene} durationInFrames={FRAMES} fps={FPS} width={600} height={600} />
+    <Composition id="Ghost" component={Ghost} durationInFrames={CHARACTER_FRAMES} fps={CHARACTER_FPS} width={480} height={520} />
+    <Composition id="Snowman" component={Snowman} durationInFrames={CHARACTER_FRAMES} fps={CHARACTER_FPS} width={500} height={580} />
+  </>
 ));

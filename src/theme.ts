@@ -1,4 +1,7 @@
+import {deepMerge, FORMAT_SIZES} from './theme-utils';
 import type {Format} from './types';
+
+export {deepMerge, FORMAT_SIZES};
 
 export type Entrance = 'pop' | 'slide' | 'fade' | 'bounce';
 /** speech = comic-style spike under the bubble, pointing down toward the avatar. */
@@ -236,20 +239,6 @@ export type Theme = {
 type DeepPartial<T> = {[K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> | null : T[K]};
 export type ThemeInput = DeepPartial<Theme> & {extends?: string};
 
-const isPlainObject = (v: unknown): v is Record<string, unknown> =>
-  typeof v === 'object' && v !== null && !Array.isArray(v);
-
-export const deepMerge = <T>(base: T, override: unknown): T => {
-  if (!isPlainObject(base) || !isPlainObject(override)) {
-    return (override === undefined ? base : override) as T;
-  }
-  const out: Record<string, unknown> = {...base};
-  for (const [key, value] of Object.entries(override)) {
-    out[key] = key in out ? deepMerge(out[key], value) : value;
-  }
-  return out as T;
-};
-
 // Every *.json file in /themes is bundled automatically, keyed by file name.
 const themeContext = require.context('../themes', false, /\.json$/);
 export const themeRegistry: Record<string, ThemeInput> = Object.fromEntries(
@@ -277,10 +266,6 @@ export const resolveTheme = (input: string | ThemeInput | undefined): Theme => {
   return deepMerge(resolveNamed(input.extends ?? 'default', []), input);
 };
 
-export const FORMAT_SIZES: Record<Format, {width: number; height: number}> = {
-  vertical: {width: 1080, height: 1920},
-  horizontal: {width: 1920, height: 1080},
-};
 
 export const getVideoSize = (theme: Theme, format?: Format) => {
   const preset = FORMAT_SIZES[format ?? theme.video.format] ?? FORMAT_SIZES.vertical;

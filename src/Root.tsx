@@ -7,7 +7,7 @@ import {resolveSrc} from './assets';
 import {ChatVideo} from './ChatVideo';
 import {LessonVideo} from './lesson/LessonVideo';
 import {getLessonVideoSize, resolveLessonTheme} from './lesson/theme';
-import {computeLessonTimeline} from './lesson/timing';
+import {computeLessonTimeline, getLessonSlides} from './lesson/timing';
 import type {LessonProps} from './lesson/types';
 import samplePhrases from '../phrases/phrase1.json';
 import {PhraseVideo} from './phrase/PhraseVideo';
@@ -43,18 +43,29 @@ const readAudioDurations = (items: {audio?: string}[]) =>
 const calculateLessonMetadata: CalculateMetadataFunction<LessonProps> = async ({props}) => {
   const theme = resolveLessonTheme(props.theme);
   const fps = theme.video.fps;
-  const audioDurations = await readAudioDurations(props.lines);
+  const slides = getLessonSlides(props, theme);
+  // Indexed by line position across all slides, matching computeLessonTimeline.
+  const lines = slides.flatMap((s) => s.lines);
+  const [audioDurations, translationAudioDurations] = await Promise.all([
+    readAudioDurations(lines),
+    readAudioDurations(lines.map((line) => ({audio: line.translationAudio}))),
+  ]);
   return {
     fps,
-    durationInFrames: computeLessonTimeline(props.lines, audioDurations, theme, fps).durationInFrames,
+    durationInFrames: computeLessonTimeline(slides, audioDurations, translationAudioDurations, theme, fps).durationInFrames,
     ...getLessonVideoSize(theme, props.format),
-    props: {...props, audioDurations},
+    props: {...props, audioDurations, translationAudioDurations},
   };
 };
 
 const calculatePhraseMetadata: CalculateMetadataFunction<PhraseProps> = async ({props}) => {
   const theme = resolvePhraseTheme(props.theme);
   const fps = theme.video.fps;
+  // CLI commands like `remotion compositions --props=lessons/x.json` hand every composition the
+  // same file; lesson slides have no `text`, so skip the calculation instead of crashing.
+  if (!props.slides.every((slide) => typeof slide.text === 'string')) {
+    return {fps, durationInFrames: 1, ...getPhraseVideoSize(theme, props.format)};
+  }
   const audioDurations = await readAudioDurations(props.slides);
   return {
     fps,

@@ -8,28 +8,35 @@
     "render": "remotion render ChatVideo out/chat1.mp4 --props=chats/chat1.json",
     "render:all": "node scripts/render-all.mjs",
     "sounds": "node scripts/generate-sounds.mjs",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p editor",
     "render:lesson": "remotion render LessonVideo out/lessons/lesson1.mp4 --props=lessons/lesson1.json",
     "render:lessons": "node scripts/render-lessons.mjs",
     "render:phrase": "remotion render PhraseVideo out/phrases/phrase1.mp4 --props=phrases/phrase1.json",
     "render:phrases": "node scripts/render-phrases.mjs",
-    "gif:placeholder": "node scripts/placeholder-gif/make-gif.mjs"
+    "gif:placeholder": "node scripts/placeholder-gif/make-gif.mjs",
+    "editor": "node editor/server.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "^4.0.532",
     "@remotion/cli": "^4.0.532",
-    "@remotion/gif": "^4.0.532",
     "@remotion/media-utils": "^4.0.532",
+    "@remotion/player": "^4.0.532",
     "@remotion/renderer": "^4.0.532",
+    "express": "^5.2.1",
+    "multer": "^2.4.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "remotion": "^4.0.532"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/multer": "^2.3.0",
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "gifenc": "^1.0.3",
     "pngjs": "^7.0.0",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2"
   }
 }

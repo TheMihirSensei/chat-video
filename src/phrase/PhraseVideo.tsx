@@ -1,11 +1,8 @@
 import React, {useMemo} from 'react';
-import {Gif} from '@remotion/gif';
 import {
   AbsoluteFill,
   Easing,
   Html5Audio,
-  Html5Video,
-  Img,
   Sequence,
   interpolate,
   useCurrentFrame,
@@ -13,6 +10,7 @@ import {
 } from 'remotion';
 import {resolveSrc} from '../assets';
 import {Background} from '../components/Background';
+import {MediaFile} from '../components/MediaFile';
 import {WobbleFilters} from '../components/Wobble';
 import {useGoogleFonts} from '../fonts';
 import type {Theme} from '../theme';
@@ -163,18 +161,6 @@ const SlideText: React.FC<{theme: PhraseTheme; slide: PhraseSlide; item: PhraseT
   );
 };
 
-const MediaFile: React.FC<{src: string; theme: PhraseTheme}> = ({src, theme}) => {
-  const m = theme.media;
-  const url = resolveSrc(src);
-  const ext = src.split('?')[0].split('.').pop()!.toLowerCase();
-  const style: React.CSSProperties = {width: '100%', height: '100%', objectFit: m.fit};
-  if (ext === 'gif') return <Gif src={url} fit={m.fit} playbackRate={m.speed} loopBehavior="loop" style={style} />;
-  if (['webm', 'mp4', 'mov', 'm4v'].includes(ext)) {
-    return <Html5Video src={url} style={style} loop muted playbackRate={m.speed} />;
-  }
-  return <Img src={url} style={style} />;
-};
-
 /** Shows the media for each run of slides that share the same file, cross-fading between runs. */
 const MediaLayer: React.FC<{theme: PhraseTheme; props: PhraseProps; timeline: PhraseTimeline}> = ({
   theme,
@@ -227,7 +213,7 @@ const MediaLayer: React.FC<{theme: PhraseTheme; props: PhraseProps; timeline: Ph
             }}
           >
             <Sequence from={Math.max(0, run.from - cf)} layout="none">
-              <MediaFile src={run.src} theme={theme} />
+              <MediaFile src={run.src} fit={m.fit} speed={m.speed} />
             </Sequence>
           </div>
         );

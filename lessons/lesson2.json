@@ -1,17 +1,45 @@
 {
   "theme": "default",
-  "title": "Introducing Yourself",
-  "subtitle": "Lesson 2",
-  "characters": {
-    "ghost":   { "image": "characters/ghost.svg",   "side": "right", "height": 340 },
-    "snowman": { "image": "characters/snowman.svg", "side": "left",  "height": 380, "offsetX": 60, "offsetY": 10 }
-  },
-  "lines": [
-    { "character": "ghost",   "text": "はじめまして！",       "reading": "hajimemashite!",          "translation": "Nice to meet you!",       "audio": "audio/l2-hajimemashite.wav" },
-    { "character": "ghost",   "text": "わたしは ゆうれい です。", "reading": "watashi wa yuurei desu.", "translation": "I'm a ghost.",            "audio": "audio/l2-watashi-wa-yuurei.wav" },
-    { "character": "ghost",   "text": "おなまえは？",         "reading": "onamae wa?",              "translation": "What's your name?",       "audio": "audio/l2-onamae-wa.wav" },
-    { "character": "snowman", "text": "ゆきだるま です。",     "reading": "yukidaruma desu.",        "translation": "I'm Snowman.",            "audio": "audio/l2-yukidaruma-desu.wav" },
-    { "character": "ghost",   "text": "よろしく おねがいします！", "reading": "yoroshiku onegaishimasu!", "translation": "Nice to meet you! (please treat me well)", "audio": "audio/l2-yoroshiku.wav", "repeat": 2 },
-    { "character": "snowman", "text": "こちらこそ！",         "reading": "kochira koso!",           "translation": "Likewise!",               "audio": "audio/l2-kochirakoso.wav" }
+  "slides": [
+    {
+      "lines": [
+        { "image": "characters/ghost.gif", "side": "right", "height": 340,
+          "text": "はじめまして！", "translation": "Nice to meet you!",
+          "audio": "audio/l2-hajimemashite.wav", "translationAudio": "audio/en-nice-to-meet-you.wav" },
+        { "image": "characters/snowman.gif", "side": "left", "height": 380, "offsetX": 60, "offsetY": 10,
+          "text": "はじめまして！", "translation": "Nice to meet you, too!",
+          "audio": "audio/l2-hajimemashite-2.wav", "translationAudio": "audio/en-nice-to-meet-you-too.wav" }
+      ]
+    },
+    {
+      "lines": [
+        { "image": "characters/ghost.gif", "side": "right", "height": 340,
+          "text": "おなまえは？", "translation": "What's your name?",
+          "audio": "audio/l2-onamae-wa.wav", "translationAudio": "audio/en-whats-your-name.wav" },
+        { "image": "characters/snowman.gif", "side": "left", "height": 380, "offsetX": 60, "offsetY": 10,
+          "text": "ゆきだるま です。", "translation": "I'm Snowman.",
+          "audio": "audio/l2-yukidaruma-desu.wav", "translationAudio": "audio/en-im-snowman.wav" }
+      ]
+    },
+    {
+      "lines": [
+        { "image": "characters/snowman.gif", "side": "left", "height": 380, "offsetX": 60, "offsetY": 10,
+          "text": "あなたは？", "translation": "And you?",
+          "audio": "audio/l2-anata-wa.wav", "translationAudio": "audio/en-and-you.wav" },
+        { "image": "characters/ghost.gif", "side": "right", "height": 340,
+          "text": "わたしは ゆうれい です。", "translation": "I'm a ghost.",
+          "audio": "audio/l2-watashi-wa-yuurei.wav", "translationAudio": "audio/en-im-a-ghost.wav" }
+      ]
+    },
+    {
+      "lines": [
+        { "image": "characters/ghost.gif", "side": "right", "height": 340,
+          "text": "よろしく おねがいします！", "translation": "Nice to meet you! (please treat me well)",
+          "audio": "audio/l2-yoroshiku.wav", "translationAudio": "audio/en-please-treat-me-well.wav" },
+        { "image": "characters/snowman.gif", "side": "left", "height": 380, "offsetX": 60, "offsetY": 10,
+          "text": "こちらこそ！", "translation": "Likewise!",
+          "audio": "audio/l2-kochirakoso.wav", "translationAudio": "audio/en-likewise.wav" }
+      ]
+    }
   ]
 }

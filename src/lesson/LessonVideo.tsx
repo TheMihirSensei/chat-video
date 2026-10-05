@@ -1,11 +1,8 @@
-import React, {useLayoutEffect, useMemo, useRef, useState} from 'react';
+import React, {useMemo} from 'react';
 import {
   AbsoluteFill,
   Html5Audio,
-  Img,
   Sequence,
-  continueRender,
-  delayRender,
   interpolate,
   spring,
   useCurrentFrame,
@@ -13,65 +10,25 @@ import {
 } from 'remotion';
 import {resolveSrc} from '../assets';
 import {Background} from '../components/Background';
+import {MediaFile} from '../components/MediaFile';
 import {WobbleFilters} from '../components/Wobble';
 import {useGoogleFonts} from '../fonts';
 import type {Theme} from '../theme';
 import {resolveLessonTheme, type LessonTheme} from './theme';
-import {computeLessonTimeline, type LessonTimeline, type LessonTimelineItem} from './timing';
-import type {CharacterDef, LessonLine, LessonProps} from './types';
+import {
+  computeLessonTimeline,
+  getLessonSlides,
+  type LessonSlideTiming,
+  type LessonTimeline,
+  type LessonTimelineItem,
+} from './timing';
+import type {CharacterDef, LessonLine, LessonProps, LessonSlide} from './types';
 
 const segmenter = new Intl.Segmenter(undefined, {granularity: 'grapheme'});
 const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 
 const fontFamily = (family: string, emoji: string | null) =>
   [`"${family}"`, emoji && `"${emoji}"`, 'sans-serif'].filter(Boolean).join(', ');
-
-const Title: React.FC<{theme: LessonTheme; title: string; subtitle?: string}> = ({theme, title, subtitle}) => {
-  const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  const t = theme.title;
-  const s = spring({frame, fps, config: {damping: 200}, durationInFrames: Math.round(fps * 0.6)});
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        top: t.top,
-        left: theme.layout.paddingX,
-        right: theme.layout.paddingX,
-        transform: `translateY(calc(-50% + ${(1 - s) * -30}px))`,
-        opacity: s,
-        textAlign: t.align,
-        zIndex: 5,
-      }}
-    >
-      <div
-        style={{
-          fontFamily: fontFamily(theme.fonts.title.family, theme.fonts.emoji),
-          fontSize: t.size,
-          fontWeight: t.weight,
-          color: t.color,
-          lineHeight: 1.15,
-          WebkitTextStroke: t.stroke ? `${t.strokeWidth}px ${t.stroke}` : undefined,
-          paintOrder: 'stroke fill',
-        }}
-      >
-        {title}
-      </div>
-      {subtitle && (
-        <div
-          style={{
-            fontFamily: fontFamily(theme.fonts.translation.family, theme.fonts.emoji),
-            fontSize: t.subtitleSize,
-            color: t.subtitleColor,
-            marginTop: 8,
-          }}
-        >
-          {subtitle}
-        </div>
-      )}
-    </div>
-  );
-};
 
 const characterStyle = (theme: LessonTheme, local: number, fps: number, side: 'left' | 'right'): React.CSSProperties => {
   if (local < 0) return {opacity: 0};
@@ -88,6 +45,8 @@ const characterStyle = (theme: LessonTheme, local: number, fps: number, side: 'l
     }
     case 'fade':
       return {opacity: interpolate(local, [0, 12], [0, 1], clamp)};
+    case 'none':
+      return {};
     case 'pop':
     default: {
       const s = spring({frame: local, fps, config: {damping: 10, stiffness: 170, mass: 0.7}});
@@ -96,13 +55,13 @@ const characterStyle = (theme: LessonTheme, local: number, fps: number, side: 'l
   }
 };
 
+/** A line's picture (usually an animated GIF) standing at the card's edge. */
 const Character: React.FC<{
   theme: LessonTheme;
-  def: CharacterDef;
+  def: CharacterDef & {image: string};
   side: 'left' | 'right';
   item: LessonTimelineItem;
-  index: number;
-}> = ({theme, def, side, item, index}) => {
+}> = ({theme, def, side, item}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const c = theme.character;
@@ -111,12 +70,6 @@ const Character: React.FC<{
   const offsetX = def.offsetX ?? c.offsetX;
   const offsetY = def.offsetY ?? c.offsetY;
 
-  // Idle float (phase-shifted per line so characters don't bob in sync) and talking bounce.
-  const seconds = frame / fps;
-  const bob = c.idle === 'bob' && local > fps * 0.5 ? Math.sin(seconds * 2.2 + index * 1.7) * c.idleAmplitude : 0;
-  const talking = item.audioPlays.some((start) => frame >= start && frame < start + item.audioFrames);
-  const talk = c.talk === 'bounce' && talking ? Math.abs(Math.sin(seconds * Math.PI * 4)) * 0.045 : 0;
-
   return (
     <div
       style={{
@@ -124,20 +77,29 @@ const Character: React.FC<{
         top: '50%',
         [side]: theme.layout.characterInset - offsetX,
         height,
+        // Square box sized by height; the picture is fitted inside it.
+        width: height,
         transform: `translate(${side === 'right' ? '50%' : '-50%'}, calc(-50% + ${offsetY}px))`,
         zIndex: 3,
       }}
     >
-      <div style={{height: '100%', transformOrigin: 'bottom center', ...characterStyle(theme, local, fps, side)}}>
-        <Img
-          src={resolveSrc(def.image)}
-          style={{
-            height: '100%',
-            display: 'block',
-            transformOrigin: 'bottom center',
-            transform: `translateY(${bob}px) scale(${1 + talk * 0.5}, ${1 - talk}) ${def.flip ? 'scaleX(-1)' : ''}`,
-          }}
-        />
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          transformOrigin: 'bottom center',
+          ...characterStyle(theme, local, fps, side),
+        }}
+      >
+        {/* The GIF starts playing from its first frame when the picture appears. */}
+        <Sequence from={item.characterIn} layout="none">
+          <MediaFile
+            src={def.image}
+            fit={c.fit}
+            speed={c.speed}
+            style={def.flip ? {transform: 'scaleX(-1)'} : undefined}
+          />
+        </Sequence>
       </div>
     </div>
   );
@@ -190,7 +152,7 @@ const Card: React.FC<{
   } else if (textLocal < 0) {
     textOpacity = 0;
   }
-  // Translation and reading follow slightly after the main text.
+  // The translation follows slightly after the main text.
   const subOpacity = c.textReveal === 'none' ? (textLocal >= 0 ? 1 : 0) : interpolate(textLocal, [6, 14], [0, 1], clamp);
 
   const sidePad = (s: 'left' | 'right') => (s === side ? c.characterSidePadding : c.paddingX);
@@ -228,19 +190,6 @@ const Card: React.FC<{
         <span style={{gridArea: '1 / 1', visibility: 'hidden'}}>{line.text}</span>
         <span style={{gridArea: '1 / 1'}}>{text}</span>
       </div>
-      {line.reading && (
-        <div
-          style={{
-            fontFamily: fontFamily(theme.fonts.reading.family, theme.fonts.emoji),
-            fontSize: c.readingSize,
-            color: c.readingColor,
-            lineHeight: 1.3,
-            opacity: subOpacity,
-          }}
-        >
-          {line.reading}
-        </div>
-      )}
       {line.translation && (
         <div
           style={{
@@ -259,134 +208,101 @@ const Card: React.FC<{
   );
 };
 
-type Rows = {top: number; height: number}[];
-
-const LessonStage: React.FC<{
-  theme: LessonTheme;
-  lessonProps: LessonProps;
-  characters: Record<string, CharacterDef>;
-  timeline: LessonTimeline;
-}> = ({theme, lessonProps, characters, timeline}) => {
-  const frame = useCurrentFrame();
-  const {fps, height} = useVideoConfig();
-  const {layout, placeholder} = theme;
-  const title = theme.title.show && lessonProps.title ? (
-    <Title theme={theme} title={lessonProps.title} subtitle={lessonProps.subtitle} />
-  ) : null;
-  const lines = lessonProps.lines;
-
-  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [rows, setRows] = useState<Rows | null>(null);
-  const [handle] = useState(() => delayRender('Measuring lesson layout'));
-  useLayoutEffect(() => {
-    setRows(rowRefs.current.slice(0, lines.length).map((el) => ({top: el!.offsetTop, height: el!.offsetHeight})));
-    continueRender(handle);
-  }, [handle, lines.length]);
-
-  const sideOf = (line: LessonLine) => {
-    const def = characters[line.character];
-    if (!def) throw new Error(`Line uses unknown character "${line.character}". Known: ${Object.keys(characters).join(', ')}`);
-    return def.side ?? 'right';
-  };
-
-  // Scroll up whenever a new line starts and its card (plus a peek of the next) would overflow.
-  let scroll = 0;
-  if (rows) {
-    // Row tops already include layout.top (it's padding on the scrolling column).
-    const visibleBottom = height - layout.bottom;
-    let previous = 0;
-    timeline.items.forEach((item, i) => {
-      const hasNext = i + 1 < lines.length;
-      const target = Math.max(0, rows[i].top + rows[i].height + (hasNext && placeholder.show ? layout.peek : 0) - visibleBottom);
-      if (frame < item.characterIn) return;
-      const progress = spring({frame: frame - item.characterIn, fps, config: {damping: 200}, durationInFrames: Math.round(fps * 0.6)});
-      scroll += (target - previous) * progress;
-      previous = target;
-    });
+/** Style for card/row `index` as the slide leaves; cards go one after another (stagger). */
+const exitStyle = (theme: LessonTheme, local: number, fps: number, index: number): React.CSSProperties => {
+  const tr = theme.transition;
+  const p = interpolate(local - index * tr.stagger * fps, [0, tr.duration * fps], [0, 1], clamp);
+  if (p <= 0) return {};
+  const e = p * p * (3 - 2 * p); // smoothstep
+  switch (tr.out) {
+    case 'rise':
+      return {opacity: 1 - e, transform: `translateY(${-e * 60}px)`};
+    case 'sink':
+      return {opacity: 1 - e, transform: `translateY(${e * 60}px)`};
+    case 'slideLeft':
+      return {opacity: 1 - e, transform: `translateX(${-e * 260}px)`};
+    case 'shrink':
+      return {opacity: 1 - e, transform: `scale(${1 - e * 0.25})`};
+    case 'fade':
+    default:
+      return {opacity: 1 - e};
   }
+};
+
+/** One self-contained slide (e.g. question + answer), centered on screen. */
+const SlideStage: React.FC<{
+  theme: LessonTheme;
+  slide: LessonSlide;
+  timing: LessonSlideTiming;
+  characters: Record<string, CharacterDef>;
+}> = ({theme, slide, timing, characters}) => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const {layout} = theme;
+  if (frame < timing.start || frame > timing.end) return null;
+
+  // A line's picture = its character preset (if any) with the line's own fields on top.
+  const pictureOf = (line: LessonLine) => {
+    const preset = line.character ? characters[line.character] : {};
+    if (!preset) {
+      throw new Error(`Line uses unknown character "${line.character}". Known: ${Object.keys(characters).join(', ')}`);
+    }
+    const def: CharacterDef = {...preset};
+    for (const key of ['image', 'side', 'height', 'offsetX', 'offsetY', 'flip'] as const) {
+      if (line[key] !== undefined) (def as Record<string, unknown>)[key] = line[key];
+    }
+    if (!def.image) throw new Error(`Line "${line.text}" has no "image" (set it on the line or its character).`);
+    return {...def, image: def.image, side: def.side ?? 'right'};
+  };
+  const outLocal = timing.outStart === null ? -1 : frame - timing.outStart;
 
   return (
-    <AbsoluteFill
+    <div
       style={{
-        overflow: 'hidden',
-        // Fixed title: fade cards out just above where the first card starts.
-        maskImage: !theme.title.scroll && title ? `linear-gradient(to bottom, transparent ${layout.top - 50}px, black ${layout.top - 10}px)` : undefined,
+        position: 'absolute',
+        top: layout.top,
+        bottom: layout.bottom,
+        left: layout.paddingX,
+        right: layout.paddingX,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
       }}
     >
-      {!theme.title.scroll && title}
-      <div
-        style={{
-          position: 'relative',
-          padding: `${layout.top}px ${layout.paddingX}px 0`,
-          transform: `translateY(${-scroll}px)`,
-        }}
-      >
-        {theme.title.scroll && title}
-        {lines.map((line, i) => {
-          const item = timeline.items[i];
-          const side = sideOf(line);
-          const prev = timeline.items[i - 1];
-          // Placeholder: the empty card where this line will appear, shown once the previous card is up.
-          const showPlaceholder = placeholder.show && prev && frame >= prev.cardIn && frame < item.cardIn;
-          const placeholderOpacity = prev ? interpolate(frame - prev.cardIn, [6, 16], [0, 1], clamp) : 0;
-          return (
-            <div
-              key={i}
-              ref={(el) => {
-                rowRefs.current[i] = el;
-              }}
-              style={{
-                position: 'relative',
-                marginTop: i === 0 ? 0 : layout.cardGap,
-                [side === 'right' ? 'marginRight' : 'marginLeft']: layout.characterInset,
-              }}
-            >
-              {showPlaceholder && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: placeholder.background,
-                    borderRadius: placeholder.radius,
-                    opacity: placeholderOpacity,
-                  }}
-                />
-              )}
-              <Card theme={theme} line={line} side={side} item={rows ? item : null} />
+      {slide.lines.map((line, i) => {
+        const item = timing.lines[i];
+        const picture = pictureOf(line);
+        const side = picture.side;
+        return (
+          <div
+            key={i}
+            style={{
+              position: 'relative',
+              marginTop: i === 0 ? 0 : layout.cardGap,
+              [side === 'right' ? 'marginRight' : 'marginLeft']: layout.characterInset,
+              ...(outLocal >= 0 ? exitStyle(theme, outLocal, fps, i) : {}),
+            }}
+          >
+            <Card theme={theme} line={line} side={side} item={item} />
+            {/* Spans from the column edge, so the character sits at characterInset like before. */}
+            <div style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, [side]: -layout.characterInset}}>
+              <Character theme={theme} def={picture} side={side} item={item} />
             </div>
-          );
-        })}
-        {/* Characters are positioned per row but drawn above every card. */}
-        {rows &&
-          lines.map((line, i) => {
-            const side = sideOf(line);
-            return (
-              <div
-                key={`c${i}`}
-                style={{position: 'absolute', top: rows[i].top, height: rows[i].height, left: 0, right: 0}}
-              >
-                <div style={{position: 'absolute', inset: `0 ${layout.paddingX}px`}}>
-                  <Character theme={theme} def={characters[line.character]} side={side} item={timeline.items[i]} index={i} />
-                </div>
-              </div>
-            );
-          })}
-      </div>
-    </AbsoluteFill>
+          </div>
+        );
+      })}
+    </div>
   );
 };
 
-const LessonAudio: React.FC<{theme: LessonTheme; lines: LessonLine[]; timeline: LessonTimeline}> = ({
-  theme,
-  lines,
-  timeline,
-}) => {
+const LessonAudio: React.FC<{theme: LessonTheme; timeline: LessonTimeline}> = ({theme, timeline}) => {
   const {fps} = useVideoConfig();
   const {sounds, music} = theme;
+  const items = timeline.slides.flatMap((s) => s.lines);
   return (
     <>
       {music.src && <Html5Audio src={resolveSrc(music.src)} volume={music.volume} loop />}
-      {timeline.items.map((item, i) => (
+      {items.map((item, i) => (
         <React.Fragment key={i}>
           {sounds.characterIn && (
             <Sequence from={item.characterIn} durationInFrames={fps * 2} layout="none">
@@ -398,12 +314,11 @@ const LessonAudio: React.FC<{theme: LessonTheme; lines: LessonLine[]; timeline: 
               <Html5Audio src={resolveSrc(sounds.cardIn)} volume={sounds.volume} />
             </Sequence>
           )}
-          {lines[i].audio &&
-            item.audioPlays.map((start, k) => (
-              <Sequence key={k} from={start} durationInFrames={item.audioFrames} layout="none">
-                <Html5Audio src={resolveSrc(lines[i].audio!)} volume={sounds.voiceVolume} />
-              </Sequence>
-            ))}
+          {item.plays.map((play, k) => (
+            <Sequence key={k} from={play.start} durationInFrames={play.frames} layout="none">
+              <Html5Audio src={resolveSrc(play.src)} volume={sounds.voiceVolume} />
+            </Sequence>
+          ))}
         </React.Fragment>
       ))}
     </>
@@ -418,19 +333,18 @@ export const LessonVideo: React.FC<LessonProps> = (props) => {
     [theme, props.background],
   );
   const characters = useMemo(() => ({...theme.characters, ...(props.characters ?? {})}), [theme, props.characters]);
+  const slides = useMemo(() => getLessonSlides(props, theme), [props, theme]);
   const timeline = useMemo(
-    () => computeLessonTimeline(props.lines, props.audioDurations, theme, fps),
-    [props.lines, props.audioDurations, theme, fps],
+    () => computeLessonTimeline(slides, props.audioDurations, props.translationAudioDurations, theme, fps),
+    [slides, props.audioDurations, props.translationAudioDurations, theme, fps],
   );
   const sample = [
-    props.title ?? '',
-    props.subtitle ?? '',
-    ...props.lines.flatMap((l) => [l.text, l.reading ?? '', l.translation ?? '']),
+    ...slides.flatMap((s) => s.lines.flatMap((l) => [l.text, l.translation ?? ''])),
     theme.card.translationFormat,
   ].join(' ');
   const f = theme.fonts;
   const fontsReady = useGoogleFonts(
-    [f.text, f.translation, f.reading, f.title, ...(f.emoji ? [{family: f.emoji, weights: []}] : [])],
+    [f.text, f.translation, ...(f.emoji ? [{family: f.emoji, weights: []}] : [])],
     sample,
   );
 
@@ -441,10 +355,18 @@ export const LessonVideo: React.FC<LessonProps> = (props) => {
       <Background background={background} />
       {fontsReady && (
         <>
-          <LessonStage theme={theme} lessonProps={props} characters={characters} timeline={timeline} />
+          {slides.map((slide, i) => (
+            <SlideStage
+              key={i}
+              theme={theme}
+              slide={slide}
+              timing={timeline.slides[i]}
+              characters={characters}
+            />
+          ))}
         </>
       )}
-      <LessonAudio theme={theme} lines={props.lines} timeline={timeline} />
+      <LessonAudio theme={theme} timeline={timeline} />
     </AbsoluteFill>
   );
 };
